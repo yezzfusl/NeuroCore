@@ -2,6 +2,7 @@
 #define CPU_ARCH_H
 
 #include <stdint.h>
+#include "memory_management.h"
 
 #define REG_COUNT 16
 #define FLAG_COUNT 8
@@ -17,7 +18,13 @@ typedef struct {
     reg_t sp;
     uint64_t instr_cache[INSTR_CACHE_SIZE];
     uint64_t cache_tag[INSTR_CACHE_SIZE];
+    memory_context_t *memory_ctx;
 } cpu_state_t;
+
+// Function declarations
+cpu_state_t *cpu_init(uint64_t memory_size);
+void cpu_cycle(cpu_state_t *cpu);
+void cpu_destroy(cpu_state_t *cpu);
 
 #define REG(x) (cpu->r[(x)])
 #define FLAG(x) (cpu->f[(x)])

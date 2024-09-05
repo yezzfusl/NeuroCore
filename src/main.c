@@ -4,47 +4,66 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern cpu_state_t *cpu_init();
-extern void cpu_cycle(cpu_state_t *cpu, uint8_t *memory);
-extern void cpu_destroy(cpu_state_t *cpu);
+#define MEMORY_SIZE (1024 * 1024 * 1024)  // 1 GB of memory
 
-#define MEMORY_SIZE 1024 * 1024  // 1 MB of memory
+static void init_memory(memory_context_t *ctx) {
+    if (!ctx) {
+        printf("Error: NULL memory context in init_memory\n");
+        return;
+    }
 
-static void init_memory(uint8_t *memory) {
-    uint64_t *instr = (uint64_t *)memory;
+    uint64_t addr = 0;
     
-    // ADD R1, R2, R3
-    instr[0] = (uint64_t)OPCODE_ADD << 56 | 1 << 52 | 2 << 48 | 3 << 44;
+    printf("Writing ADD instruction\n");
+    memory_write_byte(ctx, addr++, OPCODE_ADD);
+    memory_write_byte(ctx, addr++, (1 << 4) | 2);
+    memory_write_byte(ctx, addr++, 3 << 4);
+    addr += 5; // Padding
     
-    // SUB R4, R5, R6
-    instr[1] = (uint64_t)OPCODE_SUB << 56 | 4 << 52 | 5 << 48 | 6 << 44;
+    printf("Writing SUB instruction\n");
+    memory_write_byte(ctx, addr++, OPCODE_SUB);
+    memory_write_byte(ctx, addr++, (4 << 4) | 5);
+    memory_write_byte(ctx, addr++, 6 << 4);
+    addr += 5; // Padding
     
-    // MUL R7, R8, R9
-    instr[2] = (uint64_t)OPCODE_MUL << 56 | 7 << 52 | 8 << 48 | 9 << 44;
+    printf("Writing MUL instruction\n");
+    memory_write_byte(ctx, addr++, OPCODE_MUL);
+    memory_write_byte(ctx, addr++, (7 << 4) | 8);
+    memory_write_byte(ctx, addr++, 9 << 4);
+    addr += 5; // Padding
     
-    // LOAD R10, 42
-    instr[3] = (uint64_t)OPCODE_LOAD << 56 | 10 << 52 | 42;
+    printf("Writing LOAD instruction\n");
+    memory_write_byte(ctx, addr++, OPCODE_LOAD);
+    memory_write_byte(ctx, addr++, 10 << 4);
+    memory_write_byte(ctx, addr++, 42);
+    addr += 5; // Padding
+
+    printf("Memory initialized\n");
 }
 
 int main() {
-    cpu_state_t *cpu = cpu_init();
+    printf("Starting CPU initialization\n");
+    cpu_state_t *cpu = cpu_init(MEMORY_SIZE);
     if (!cpu) {
         fprintf(stderr, "Failed to initialize CPU\n");
         return 1;
     }
+    printf("CPU initialized successfully\n");
 
-    uint8_t *memory = (uint8_t *)calloc(MEMORY_SIZE, sizeof(uint8_t));
-    if (!memory) {
-        fprintf(stderr, "Failed to allocate memory\n");
+    if (!cpu->memory_ctx) {
+        fprintf(stderr, "Error: NULL memory context after CPU initialization\n");
         cpu_destroy(cpu);
         return 1;
     }
 
-    init_memory(memory);
+    printf("Initializing memory\n");
+    init_memory(cpu->memory_ctx);
 
+    printf("Starting CPU cycles\n");
     // Run 4 CPU cycles to execute the instructions
     for (int i = 0; i < 4; i++) {
-        cpu_cycle(cpu, memory);
+        printf("Cycle %d\n", i+1);
+        cpu_cycle(cpu);
     }
 
     printf("CPU executed 4 cycles\n");
@@ -54,7 +73,7 @@ int main() {
     printf("R10: 0x%016lx\n", cpu->r[10]);
 
     cpu_destroy(cpu);
-    free(memory);
+    printf("CPU destroyed\n");
 
     return 0;
 }
