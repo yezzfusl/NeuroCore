@@ -5,6 +5,7 @@
 
 #define REG_COUNT 16
 #define FLAG_COUNT 8
+#define INSTR_CACHE_SIZE 1024
 
 typedef uint64_t reg_t;
 typedef uint8_t flag_t;
@@ -14,6 +15,8 @@ typedef struct {
     flag_t f[FLAG_COUNT];
     reg_t pc;
     reg_t sp;
+    uint64_t instr_cache[INSTR_CACHE_SIZE];
+    uint64_t cache_tag[INSTR_CACHE_SIZE];
 } cpu_state_t;
 
 #define REG(x) (cpu->r[(x)])
@@ -31,6 +34,9 @@ typedef struct {
 
 #define ROTATE_LEFT(x, n) (((x) << (n)) | ((x) >> (64 - (n))))
 #define ROTATE_RIGHT(x, n) (((x) >> (n)) | ((x) << (64 - (n))))
+
+#define CACHE_INDEX(addr) ((addr) & (INSTR_CACHE_SIZE - 1))
+#define CACHE_TAG(addr) ((addr) >> 10)
 
 #endif // CPU_ARCH_H
 

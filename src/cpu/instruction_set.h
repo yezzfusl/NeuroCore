@@ -1,0 +1,23 @@
+#ifndef INSTRUCTION_SET_H
+#define INSTRUCTION_SET_H
+
+#define OPCODE_ADD 0x01
+#define OPCODE_SUB 0x02
+#define OPCODE_MUL 0x03
+#define OPCODE_DIV 0x04
+#define OPCODE_AND 0x05
+#define OPCODE_OR  0x06
+#define OPCODE_XOR 0x07
+#define OPCODE_LOAD 0x08
+
+#define FLAG_ZERO 0
+#define FLAG_NEGATIVE 1
+#define FLAG_OVERFLOW 2
+#define FLAG_CARRY 3
+#define FLAG_PARITY 4
+#define FLAG_AUXILIARY 5
+#define FLAG_INTERRUPT 6
+#define FLAG_DIV_ZERO 7
+
+#endif // INSTRUCTION_SET_H
+

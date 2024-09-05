@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -pedantic -std=c11 -O3 -march=native -ffast-math -funroll-loops -flto
-INCLUDES = -Iinclude
+INCLUDES = -Iinclude -Isrc
 
 SRC_DIR = src
 OBJ_DIR = obj
