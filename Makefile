@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -O3 -I./include
+CFLAGS = -Wall -Wextra -Werror -O3 -I./include -ffreestanding -nostdlib
 ASM = nasm
 ASMFLAGS = -f elf64
 LD = ld
@@ -7,6 +7,7 @@ LD = ld
 SRC_DIR = src
 BUILD_DIR = build
 INCLUDE_DIR = include
+LD_DIR = ld
 
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 ASM_SRCS = $(wildcard $(SRC_DIR)/*.asm)
@@ -29,7 +30,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 $(TARGET): $(OBJS) $(ASM_OBJS)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(LD) -T $(LD_DIR)/linker.ld -o $@ $^
 
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
