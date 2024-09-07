@@ -1,4 +1,5 @@
 #include "cpu.h"
+#include "instructions.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -28,14 +29,17 @@ void cpu_reset(CPU *cpu) {
 }
 
 int cpu_execute_instruction(CPU *cpu, MemorySystem *memory) {
-    (void)memory; // Cast to void to explicitly ignore the parameter
+    uint32_t instr_word = cpu_fetch_instruction(cpu, memory);
+    Instruction instr = {
+        .opcode = (instr_word >> 24) & 0xFF,
+        .operand1 = (instr_word >> 16) & 0xFF,
+        .operand2 = (instr_word >> 8) & 0xFF,
+        .immediate = instr_word & 0xFF
+    };
 
-    // This is a placeholder that just increments R0
-    uint64_t r0_value = cpu_get_register(cpu, R0);
-    cpu_set_register(cpu, R0, r0_value + 1);
+    execute_instruction(cpu, memory, &instr);
 
-    // Always return 1 to indicate successful execution
-    return 1;
+    return (instr.opcode != OP_HLT);
 }
 
 void cpu_set_flag(CPU *cpu, uint8_t flag) {
@@ -56,5 +60,12 @@ uint64_t cpu_get_register(CPU *cpu, Register reg) {
 
 void cpu_set_register(CPU *cpu, Register reg, uint64_t value) {
     cpu->registers[reg] = value;
+}
+
+uint32_t cpu_fetch_instruction(CPU *cpu, MemorySystem *memory) {
+    uint32_t instruction;
+    memory_read_word(memory, cpu->program_counter, &instruction);
+    cpu->program_counter += 4;
+    return instruction;
 }
 
