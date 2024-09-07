@@ -36,7 +36,10 @@ void vm_reset(VM *vm) {
 }
 
 int vm_execute(VM *vm) {
-    return cpu_execute_instruction(vm->cpu, vm->memory);
+    while (cpu_execute_instruction(vm->cpu, vm->memory)) {
+        // Continue executing instructions
+    }
+    return 0;
 }
 
 CPU* vm_get_cpu(VM *vm) {

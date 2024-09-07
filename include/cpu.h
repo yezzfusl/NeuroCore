@@ -33,5 +33,8 @@ int cpu_get_flag(CPU *cpu, uint8_t flag);
 uint64_t cpu_get_register(CPU *cpu, Register reg);
 void cpu_set_register(CPU *cpu, Register reg, uint64_t value);
 
+// New function to fetch instruction
+uint32_t cpu_fetch_instruction(CPU *cpu, MemorySystem *memory);
+
 #endif // CPU_H
 
