@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-VM* vm_create() {
+VM* vm_create(size_t memory_size) {
     VM *vm = (VM*)malloc(sizeof(VM));
     if (!vm) return NULL;
 
-    vm->memory = (uint8_t*)malloc(VM_MEMORY_SIZE);
+    vm->memory = memory_create(memory_size);
     if (!vm->memory) {
         free(vm);
         return NULL;
@@ -18,13 +18,13 @@ VM* vm_create() {
 
 void vm_destroy(VM *vm) {
     if (vm) {
-        free(vm->memory);
+        memory_destroy(vm->memory);
         free(vm);
     }
 }
 
 void vm_reset(VM *vm) {
-    asm_reset_memory(vm->memory, VM_MEMORY_SIZE);
+    // Reset memory (this is now handled by memory_create)
     asm_init_cpu(vm->registers, &vm->program_counter, &vm->stack_pointer, &vm->base_pointer);
     vm->flags = 0;
 }
