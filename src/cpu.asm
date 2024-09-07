@@ -58,3 +58,5 @@ asm_reset_memory:
     pop rbp
     ret
 
+section .note.GNU-stack noalloc noexec nowrite progbits
+

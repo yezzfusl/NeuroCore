@@ -30,6 +30,7 @@ void vm_reset(VM *vm) {
 }
 
 int vm_execute(VM *vm) {
+    (void)vm; // Suppress unused parameter warning
     // TODO: Implement instruction fetch-decode-execute cycle
     return 0;
 }
