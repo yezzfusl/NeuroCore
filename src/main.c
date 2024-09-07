@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <inttypes.h>  // Add this include for PRIu64
 #include "vm.h"
+#include "cpu.h"
 
 #define VM_MEMORY_SIZE 1048576 // 1 MB of memory
 
@@ -14,11 +16,17 @@ int main(void) {
 
     printf("VM created successfully\n");
 
-    // TODO: Load program into VM memory
+    // Simple test: execute 10 instructions
+    for (int i = 0; i < 10; i++) {
+        if (!vm_execute(vm)) {
+            fprintf(stderr, "VM execution failed\n");
+            vm_destroy(vm);
+            return 1;
+        }
+    }
 
-    int result = vm_execute(vm);
-
-    printf("VM execution completed with result: %d\n", result);
+    printf("VM executed 10 instructions\n");
+    printf("R0 value: %" PRIu64 "\n", cpu_get_register(vm_get_cpu(vm), R0));
 
     vm_destroy(vm);
 
