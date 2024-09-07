@@ -24,11 +24,8 @@ void vm_destroy(VM *vm) {
 }
 
 void vm_reset(VM *vm) {
-    memset(vm->memory, 0, VM_MEMORY_SIZE);
-    memset(vm->registers, 0, sizeof(vm->registers));
-    vm->program_counter = 0;
-    vm->stack_pointer = VM_MEMORY_SIZE - 1;
-    vm->base_pointer = VM_MEMORY_SIZE - 1;
+    asm_reset_memory(vm->memory, VM_MEMORY_SIZE);
+    asm_init_cpu(vm->registers, &vm->program_counter, &vm->stack_pointer, &vm->base_pointer);
     vm->flags = 0;
 }
 
