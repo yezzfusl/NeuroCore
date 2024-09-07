@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -O3 -I./include -ffreestanding -nostdlib
+CFLAGS = -Wall -Wextra -Werror -O3 -I./include -ffreestanding -nostdlib -no-pie
 ASM = nasm
 ASMFLAGS = -f elf64
 LD = ld

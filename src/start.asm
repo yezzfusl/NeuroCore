@@ -1,6 +1,6 @@
 section .text.start
 global _start
-
+extern stack_top
 extern main
 
 _start:
