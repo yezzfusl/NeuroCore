@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <inttypes.h>  // Add this include for PRIu64
+#include <inttypes.h>
 #include "vm.h"
 #include "cpu.h"
 
@@ -16,10 +16,10 @@ int main(void) {
 
     printf("VM created successfully\n");
 
-    // Simple test: execute 10 instructions
+    // Execute 10 instructions
     for (int i = 0; i < 10; i++) {
         if (!vm_execute(vm)) {
-            fprintf(stderr, "VM execution failed\n");
+            fprintf(stderr, "VM execution failed at instruction %d\n", i);
             vm_destroy(vm);
             return 1;
         }
