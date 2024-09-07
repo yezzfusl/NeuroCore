@@ -9,7 +9,9 @@ BUILD_DIR = build
 INCLUDE_DIR = include
 
 SRCS = $(wildcard $(SRC_DIR)/*.c)
+ASM_SRCS = $(wildcard $(SRC_DIR)/*.asm)
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
+ASM_OBJS = $(patsubst $(SRC_DIR)/%.asm,$(BUILD_DIR)/%.o,$(ASM_SRCS))
 
 TARGET = vm
 
@@ -23,7 +25,10 @@ $(BUILD_DIR):
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(TARGET): $(OBJS)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.asm
+	$(ASM) $(ASMFLAGS) $< -o $@
+
+$(TARGET): $(OBJS) $(ASM_OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
